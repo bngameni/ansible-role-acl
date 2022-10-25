@@ -23,9 +23,31 @@ ansible-galaxy install claranet.acl
 
 ## :gear: Role variables
 
-Variable | Default value | Description
----------|---------------|------------
-null     | **null**      | null       
+<table>
+<tr>
+<td><strong>Variable</strong></td> <td><strong>Default value</strong></td> <td><strong>Description</strong></td>
+</tr>
+<tr>
+<td> acl_config </td>
+<td>
+
+```yaml
+  - path: /etc/foo.conf
+    default: false           # can be omit
+    entity: "root"
+    etype: "user" 
+    follow: true             # can be omit
+    permissions: "rwx"
+    state: query
+    recursive: false         # can be omit
+```
+
+</td>
+
+<td>acl to set</td>
+</tr>
+
+</table>
 
 ## :arrows_counterclockwise: Dependencies
 
@@ -38,6 +60,13 @@ N/A
 - hosts: all
   roles:
     - claranet.acl
+  vars:
+  acl_config:
+    - name:        /etc/acl_directory
+      entity:      user01
+      etype:       user
+      permissions: "rw"
+      state:       present
 ```
 
 ## :closed_lock_with_key: [Hardening](HARDENING.md)

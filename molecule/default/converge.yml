@@ -1,5 +1,34 @@
 ---
 - name: Converge
   hosts: all
+  become: true
+
+  vars:
+    acl_config:
+      - path: /etc/acl_directory
+        entity: user01
+        etype: group
+        permissions: "rwx"
+        state: present
+
+  pre_tasks:
+    - name: Add users
+      ansible.builtin.user:
+        name: user01
+        shell: /bin/bash
+
+    - name: "Check if files exists"
+      ansible.builtin.stat:
+        path: "/etc/acl_directory"
+        get_attributes: false
+      register: _acl_check_files_exists
+
+    - name: Create a directory to test
+      ansible.builtin.file:
+        path: "/etc/acl_directory"
+        state: directory
+        mode: '0745'
+      when: not _acl_check_files_exists.stat.exists
+
   roles:
     - role: claranet.acl
